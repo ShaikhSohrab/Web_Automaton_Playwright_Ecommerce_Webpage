@@ -1,27 +1,20 @@
 import {test, expect} from '@playwright/test';
 
 test("Verify Add to Cart", async ({page}) => {
-    test.setTimeout(50_000);
 
-    // Visiting Page
-    await page.goto("https://www.demoblaze.com");
-
-    // // Login by Valid Username and Password
-    // const loginButton = await page.locator("id=login2");
-    // loginButton.click();
-    // await page.locator("id=loginusername").fill("SohrabShaikh");
-    // await page.locator("id=loginpassword").fill("SohrabShaikh");
-    // await page.click("//button[@onclick='logIn()']");
-    await page.waitForTimeout(2000);
+    // Visiting Page and wait untill DOM is loaded
+    await page.goto("https://www.demoblaze.com", {waitUntil:'domcontentloaded'});
+    const checkUser = page.getByText('Welcome SohrabShaikh');
+    await expect(checkUser).toBeVisible();
 
     // Adding click on Phone as in near future the Home page might change.
-    // Adding Item from Category: Phones
+    // Adding Item from Category: Phones Using Custom Xpaths
     await page.click('//a[@id="itemc" and text()="Phones"]');
     await page.click('//a[@class="hrefch" and text()="Samsung galaxy s6"]');
     await page.click('//a[@class="btn btn-success btn-lg"]');
     await page.click('//a[@class="nav-link"and text()="Home "]');
 
-    // Adding Item from Category: Laptops
+    // Adding Item from Category: Laptops with playwright locators
     await page.click('//a[@id="itemc"and text()="Laptops"]');
     await page.click('//a[@class="hrefch"and text()="Sony vaio i5"]');
     await page.click('//a[@class="btn btn-success btn-lg"]');
@@ -35,18 +28,7 @@ test("Verify Add to Cart", async ({page}) => {
 })
 
 test("Verify Cart and Place Order", async ({page}) => {
-    // test.setTimeout(50_000);
 
-    //  // Visiting Page
-    //  await page.goto("https://www.demoblaze.com");
-
-    //  // Login by Valid Username and Password
-    //  const loginButton = await page.locator("id=login2");
-    //  loginButton.click();
-    //  await page.locator("id=loginusername").fill("SohrabShaikh");
-    //  await page.locator("id=loginpassword").fill("SohrabShaikh");
-    //  await page.click("//button[@onclick='logIn()']");
-     await page.waitForTimeout(2000);
     // Verify Cart Items by their Name individually
     await page.goto('https://www.demoblaze.com/cart.html')
 
@@ -75,6 +57,4 @@ test("Verify Cart and Place Order", async ({page}) => {
 
     await page.click('//button[normalize-space(text())="OK"]');
     
-    // await page.waitForTimeout(5000);
-
 })
