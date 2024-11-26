@@ -1,39 +1,41 @@
-const {test, expect} = require('@playwright/test')
+const {test, expect} = require("@playwright/test")
 
 // This is to prevent using LoginAuth of GlobalSetup
 test.use({storageState:"./NoAuth.json"});
 
 test("Verify if the URL is loaded and is same as expected", async ({page}) => {
-
-    await page.goto("https://www.demoblaze.com");
+    await page.goto("/");
     await expect(page).toHaveTitle("STORE");
-    await expect(page).toHaveURL('https://www.demoblaze.com/');
+    await expect(page).toHaveURL("https://www.demoblaze.com/");
     
 });
 
 
 test("Verify New User Registeration Flow", async ({page}) => {
-    const initialUserName = 'SohrabShaikh';
+
+// Defile User Name and join Username with Date and Time to have unique Username everytime
+    const initialUserName = "SohrabShaikh";
     const dateTimeUser = Date.now();
     let alertAppeared = false;
 
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'networkidle'});
+// Goto webpage
+    await page.goto("/");
     await expect(page).toHaveTitle("STORE");
 
-    const signup = page.locator('id=signin2');
+    const signup = page.locator("id=signin2");
     await signup.click();
 
-    page.on('dialog', async (alertMessage) => {
+    page.on("dialog", async (alertMessage) => {
         alertAppeared = true;
         expect(alertMessage.type()).toContain("alert");
         expect(alertMessage.message()).toContain("Sign up successful.");
-        await alertMessage.dismiss();
+        await alertMessage.accept();
     });
 
     const incrementedUserName = `${initialUserName}${dateTimeUser}`;
-    await page.fill('id=sign-username', incrementedUserName);
-    await page.fill('id=sign-password', "SohrabShaikh");
-    await page.click('//button[@onclick="register()"]');
+    await page.fill("id=sign-username", incrementedUserName);
+    await page.fill("id=sign-password", "SohrabShaikh");
+    await page.click("//button[@onclick='register()']");
 
     await page.waitForTimeout(5000);
 
@@ -43,6 +45,7 @@ test("Verify New User Registeration Flow", async ({page}) => {
         console.log(`Error occurred during registration for username: ${incrementedUserName}`);
     }
     
+    expect(alertAppeared).toBeTruthy();
 });
 
 test("Verify if already registerd user is able to register again", async ({page}) => {
@@ -50,94 +53,110 @@ test("Verify if already registerd user is able to register again", async ({page}
     const userPass = "SohrabShaikh";
     let alertAppeared = false;
 
-    page.on('alertMsg', async (alertMessage) => {
+    page.on("dialog", async (alertMessage) => {
         alertAppeared = true;
-        expect(alertMessage.type()).toContain("alert")
-        expect(alertMessage.message()).toContain("This user already exist.")
-        await alertMessage.dismiss();
-    })
+        expect(alertMessage.type()).toContain("alert");
+        expect(alertMessage.message()).toContain("This user already exist.");
+        await alertMessage.accept();
+    });
 
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    await page.goto("/");
     const signupButton = await page.locator("id=signin2");
     signupButton.click();
     await page.fill("id=sign-username", userName);
     await page.fill("id=sign-password", userPass);
     await page.click("//button[@onclick='register()']");
-})
-
-
-test("1 Verify if user is able to register with only user name filled", async ({page}) => {
+    await page.waitForTimeout(5000);
+    console.log("Register button Clicked")
     
-    page.on('alertMsg', async (alertMessage) => {
+    expect(alertAppeared).toBeTruthy();
+});
+
+
+test("Verify if user is able to register with only Username filled", async ({page}) => {
+    let alertAppeared = false;
+    page.on("dialog", async (alertMessage) => {
         alertAppeared = true;
         expect(alertMessage.type()).toContain("alert")
         expect(alertMessage.message()).toContain("Please fill out Username and Password.")
         await alertMessage.dismiss();
-    })
+    });
 
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    await page.goto("/");
     const signupButton = await page.locator("id=signin2");
     signupButton.click();
     await page.fill("id=sign-username", "tasdhufafgsr");
     await page.click("//button[@onclick='register()']");
-})
+
+    expect(alertAppeared).toBeTruthy();
+});
 
 
-test("2 Verify if user is able to register with only password filled", async ({page}) => {
+test("Verify if user is able to register with only password filled", async ({page}) => {
+    let alertAppeared = false;
     
-    page.on('alertMsg', async (alertMessage) => {
+    page.on('dialog', async (alertMessage) => {
         alertAppeared = true;
         expect(alertMessage.type()).toContain("alert")
         expect(alertMessage.message()).toContain("Please fill out Username and Password.")
         await alertMessage.dismiss();
-    })
+    });
 
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    await page.goto("/");
     const signupButton = await page.locator("id=signin2");
     signupButton.click();
     await page.fill("id=sign-password", "tasdhufafgsr");
     await page.click("//button[@onclick='register()']");
-})
+
+    expect(alertAppeared).toBeTruthy();
+});
 
 
-test("3 Verify if user is able to register without username and password", async ({page}) => {
-    
-    page.on('alertMsg', async (alertMessage) => {
+test("Verify if user is able to register without username and password", async ({page}) => {
+    let alertAppeared = false;
+
+    page.on("dialog", async (alertMessage) => {
         alertAppeared = true;
         expect(alertMessage.type()).toContain("alert")
         expect(alertMessage.message()).toContain("Please fill out Username and Password.")
         await alertMessage.dismiss();
     })
 
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    await page.goto("/");
     const signupButton = await page.locator("id=signin2");
     signupButton.click();
     await page.click("//button[@onclick='register()']");
-})
+
+    expect(alertAppeared).toBeTruthy();
+});
 
 
-test("4 Verify if user is able to click on close button", async ({page}) => {
+test("Verify if user is able to click on close button from Register popup Window", async ({page}) => {
     
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    await page.goto("/");
     const signupButton = await page.locator("id=signin2");
     signupButton.click();
-    await page.click("//button[@onclick='register()']/preceding-sibling::button[text()='Close']");
+    const closeButton = await page.locator("//button[@onclick='register()']/preceding-sibling::button[text()='Close']");
+    await closeButton.click();
+    await expect(closeButton).toBeHidden();
 })
 
 
-test("5 Verify if user is able to click on 'X' button", async ({page}) => {
+test("Verify if user is able to click on 'X' button from Register popup Window", async ({page}) => {
     
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    await page.goto("/");
     const signupButton = await page.locator("id=signin2");
     signupButton.click();
-    await page.click("//h5[@id='signInModalLabel']/following-sibling::button[@aria-label='Close']");
-})
+    const closeIcon = await page.locator("//h5[@id='signInModalLabel']/following-sibling::button[@aria-label='Close']");
+    await closeIcon.click();
+    await expect(closeIcon).toBeHidden();
+});
 
 
 test("Login Flow for Registered User", async ({page}) => {
     const userName = "SohrabShaikh";
     const userPass = "SohrabShaikh";
-    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    await page.goto("/");
     const loginButton = await page.locator("id=login2");
     loginButton.click();
     await page.fill("id=loginusername", userName);
@@ -145,95 +164,130 @@ test("Login Flow for Registered User", async ({page}) => {
     await page.click("//button[@onclick='logIn()']");
     const loggedInUser = page.locator("id=nameofuser")
     await expect(loggedInUser).toHaveText(`Welcome ${userName}`);
-})
+});
 
 
 test("Login Flow with Invalid User Name", async ({page}) => {
-    await page.goto("https://www.demoblaze.com");
-    await page.waitForTimeout(2000);
+    let alertAppeared = false;
+
+    page.on("dialog", async (alertMessage) => {
+        alertAppeared = true;
+        expect(alertMessage.type()).toContain("alert");
+        expect(alertMessage.message()).toContain("User does not exist.");
+        await alertMessage.dismiss();
+    });
+
+    await page.goto("/");
     const loginButton = await page.locator("id=login2");
     loginButton.click();
     await page.fill("id=loginusername", "Sohrabaikh");
     await page.fill("id=loginpassword", "SohrabShaikh");
 
-    page.on('alertMsg', async (alertMessage) => {
-        expect(alertMessage.type()).toContain("alert")
-        expect(alertMessage.message()).toContain("User does not exist.")
-        await alertMessage.dismiss();
-    })
-
     await page.click("//button[@onclick='logIn()']");
-})
+    await page.waitForTimeout(2000);
+
+    expect(alertAppeared).toBeTruthy();
+});
 
 
 test("Login Flow with Invalid User Password", async ({page}) => {
-    await page.goto("https://www.demoblaze.com");
+    let alertAppeared = false;
+
+    page.on('dialog', async (alertMessage) => {
+        alertAppeared = true;
+        expect(alertMessage.type()).toContain("alert")
+        expect(alertMessage.message()).toContain("Wrong password.")
+        await alertMessage.dismiss();
+    });
+    await page.goto("/");
     const loginButton = await page.locator("id=login2");
     loginButton.click();
     await page.fill("id=loginusername", "SohrabShaikh");
     await page.fill("id=loginpassword", "SohrabSikh");
-    page.on('dialog', async (alertMessage) => {
-        expect(alertMessage.type()).toContain("alert")
-        expect(alertMessage.message()).toContain("Wrong password.")
-        await alertMessage.dismiss();
-    })
     await page.click("//button[@onclick='logIn()']");
-})
+    await page.waitForTimeout(2000);
+
+    expect(alertAppeared).toBeTruthy();
+
+});
 
 
 test("Login Flow without user name", async ({page}) => {
-    await page.goto("https://www.demoblaze.com");
-    const loginButton = await page.locator("id=login2");
-    loginButton.click();
-    await page.fill("id=loginpassword", "SohrabSikh");
+    let alertAppeared = false;
+
     page.on('dialog', async (alertMessage) => {
+        alertAppeared = true;
         expect(alertMessage.type()).toContain("alert")
         expect(alertMessage.message()).toContain("Please fill out Username and Password.")
         await alertMessage.dismiss();
-    })
+    });
+    await page.goto("/");
+    const loginButton = await page.locator("id=login2");
+    loginButton.click();
+    await page.fill("id=loginpassword", "SohrabSikh");
+
     await page.click("//button[@onclick='logIn()']");
+    await page.waitForTimeout(3000);
+
+    expect(alertAppeared).toBeTruthy();
 })
 
 
 test("Login Flow without Password", async ({page}) => {
-    await page.goto("https://www.demoblaze.com");
-    await page.waitForTimeout(2000);
-    const loginButton = await page.locator("id=login2");
-    loginButton.click();
-    await page.fill("id=loginusername", "SohrabShaikh");
+    let alertAppeared = false;
     page.on('dialog', async (alertMessage) => {
+        alertAppeared = true;
         expect(alertMessage.type()).toContain("alert")
         expect(alertMessage.message()).toContain("Please fill out Username and Password.")
         await alertMessage.dismiss();
     })
+    await page.goto("/");
+    const loginButton = await page.locator("id=login2");
+    loginButton.click();
+    await page.fill("id=loginusername", "SohrabShaikh");
+
     await page.click("//button[@onclick='logIn()']");  
+    await page.waitForTimeout(3000);
+
+    expect(alertAppeared).toBeTruthy();
 })
 
 
 test("Login Flow without UserName and Password", async ({page}) => {
-    await page.goto("https://www.demoblaze.com");
-    const loginButton = await page.locator("id=login2");
-    loginButton.click();
+    let alertAppeared = false;
+
     page.on('dialog', async (alertMessage) => {
+        alertAppeared = true;
         expect(alertMessage.type()).toContain("alert")
         expect(alertMessage.message()).toContain("Please fill out Username and Password.")
         await alertMessage.dismiss();
-    })
+    });
+    await page.goto("/");
+    const loginButton = await page.locator("id=login2");
+    loginButton.click();
+
     await page.click("//button[@onclick='logIn()']");
-})
+    expect(alertAppeared).toBeTruthy();
+});
 
 
 test("Verify Close button behaviour on Login popup window", async ({page}) => {
-    await page.goto("https://www.demoblaze.com");
+    await page.goto("/");
     const loginButton = await page.locator("id=login2");
     loginButton.click();
-    await page.click("//button[@onclick='logIn()']/preceding-sibling::button[text()='Close']");
-})
+    const closeButtonLogin = await page.locator("//button[@onclick='logIn()']/preceding-sibling::button[text()='Close']")
+    await closeButtonLogin.click();
+
+    await expect(closeButtonLogin).toBeHidden();
+});
 
 
 test("Verify 'X' button behaviour on Login popup window", async ({page}) => {
-    await page.goto("https://www.demoblaze.com");
+    await page.goto("/");
     const loginButton = await page.locator("id=login2");
     loginButton.click();
-    await page.click('//h5[@id="logInModalLabel" and text()="Log in"]/following-sibling::button[@aria-label="Close"]');
+    const closeIconLogin = await page.locator("//h5[@id='logInModalLabel' and text()='Log in']/following-sibling::button[@aria-label='Close']");
+    await closeIconLogin.click();
+
+    await expect(closeIconLogin).toBeHidden();
 })

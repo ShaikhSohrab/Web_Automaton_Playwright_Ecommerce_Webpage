@@ -25,11 +25,14 @@ module.exports = defineConfig({
   reporter: [['html', {open: 'always'}]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+     // Defining Base URL and applied Wait to not repeat this in every test
+      baseURL: 'https://www.demoblaze.com',
+      waitUntil: 'domcontentloaded',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'on',
+    screenshot: 'on',
+    video:'retain-on-filure',
     headless: false,
     storageState: "./LoginAuth.json",
   },
