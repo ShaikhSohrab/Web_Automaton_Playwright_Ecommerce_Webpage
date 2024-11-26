@@ -21,10 +21,6 @@ test('Dynamic Content Verification', async ({page}) => {
     const productAPI = apiData.map(item => item.title);
     expect(productUI).toEqual(productAPI);
     console.log('UI and API data Matched');
-
-
-
-
     
     
 })

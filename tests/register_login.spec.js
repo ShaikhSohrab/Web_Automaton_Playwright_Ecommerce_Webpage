@@ -12,7 +12,7 @@ test("Verify if the URL is loaded and is same as expected", async ({page}) => {
 });
 
 
-test("User Registeration Flow", async ({page}) => {
+test("Verify New User Registeration Flow", async ({page}) => {
     const initialUserName = 'SohrabShaikh';
     const dateTimeUser = Date.now();
     let alertAppeared = false;
@@ -45,7 +45,7 @@ test("User Registeration Flow", async ({page}) => {
     
 });
 
-test.only("Verify if already registerd user is able to register again", async ({page}) => {
+test("Verify if already registerd user is able to register again", async ({page}) => {
     const userName = "SohrabShaikh";
     const userPass = "SohrabShaikh";
     let alertAppeared = false;
@@ -63,6 +63,74 @@ test.only("Verify if already registerd user is able to register again", async ({
     await page.fill("id=sign-username", userName);
     await page.fill("id=sign-password", userPass);
     await page.click("//button[@onclick='register()']");
+})
+
+
+test("1 Verify if user is able to register with only user name filled", async ({page}) => {
+    
+    page.on('alertMsg', async (alertMessage) => {
+        alertAppeared = true;
+        expect(alertMessage.type()).toContain("alert")
+        expect(alertMessage.message()).toContain("Please fill out Username and Password.")
+        await alertMessage.dismiss();
+    })
+
+    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    const signupButton = await page.locator("id=signin2");
+    signupButton.click();
+    await page.fill("id=sign-username", "tasdhufafgsr");
+    await page.click("//button[@onclick='register()']");
+})
+
+
+test("2 Verify if user is able to register with only password filled", async ({page}) => {
+    
+    page.on('alertMsg', async (alertMessage) => {
+        alertAppeared = true;
+        expect(alertMessage.type()).toContain("alert")
+        expect(alertMessage.message()).toContain("Please fill out Username and Password.")
+        await alertMessage.dismiss();
+    })
+
+    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    const signupButton = await page.locator("id=signin2");
+    signupButton.click();
+    await page.fill("id=sign-password", "tasdhufafgsr");
+    await page.click("//button[@onclick='register()']");
+})
+
+
+test("3 Verify if user is able to register without username and password", async ({page}) => {
+    
+    page.on('alertMsg', async (alertMessage) => {
+        alertAppeared = true;
+        expect(alertMessage.type()).toContain("alert")
+        expect(alertMessage.message()).toContain("Please fill out Username and Password.")
+        await alertMessage.dismiss();
+    })
+
+    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    const signupButton = await page.locator("id=signin2");
+    signupButton.click();
+    await page.click("//button[@onclick='register()']");
+})
+
+
+test("4 Verify if user is able to click on close button", async ({page}) => {
+    
+    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    const signupButton = await page.locator("id=signin2");
+    signupButton.click();
+    await page.click("//button[@onclick='register()']/preceding-sibling::button[text()='Close']");
+})
+
+
+test("5 Verify if user is able to click on 'X' button", async ({page}) => {
+    
+    await page.goto("https://www.demoblaze.com", {waitUnitl:'commit'});
+    const signupButton = await page.locator("id=signin2");
+    signupButton.click();
+    await page.click("//h5[@id='signInModalLabel']/following-sibling::button[@aria-label='Close']");
 })
 
 
@@ -152,4 +220,20 @@ test("Login Flow without UserName and Password", async ({page}) => {
         await alertMessage.dismiss();
     })
     await page.click("//button[@onclick='logIn()']");
+})
+
+
+test("Verify Close button behaviour on Login popup window", async ({page}) => {
+    await page.goto("https://www.demoblaze.com");
+    const loginButton = await page.locator("id=login2");
+    loginButton.click();
+    await page.click("//button[@onclick='logIn()']/preceding-sibling::button[text()='Close']");
+})
+
+
+test("Verify 'X' button behaviour on Login popup window", async ({page}) => {
+    await page.goto("https://www.demoblaze.com");
+    const loginButton = await page.locator("id=login2");
+    loginButton.click();
+    await page.click('//h5[@id="logInModalLabel" and text()="Log in"]/following-sibling::button[@aria-label="Close"]');
 })
