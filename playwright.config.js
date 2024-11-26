@@ -22,17 +22,17 @@ module.exports = defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [['html', {open: 'always'}]],
+  reporter: [['html', { open: 'always' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-     // Defining Base URL and applied Wait to not repeat this in every test
-      baseURL: 'https://www.demoblaze.com',
-      waitUntil: 'domcontentloaded',
+    // Defining Base URL and applied Wait to not repeat this in every test
+    baseURL: 'https://www.demoblaze.com',
+    waitUntil: 'domcontentloaded',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on',
     screenshot: 'on',
-    video:'retain-on-filure',
+    video: 'retain-on-filure',
     headless: false,
     storageState: "./LoginAuth.json",
   },
