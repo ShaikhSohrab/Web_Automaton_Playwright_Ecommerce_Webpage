@@ -1,0 +1,23 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+  displayName: 'Check Repository'
+
+- script: 
+    cd web_assignment
+    npm install
+    npm playwright install
+    npx playwright test --project=chromium --reporter=html
+  displayName: 'Execute Playwright Tests'
+
+- task: PublishBuildArtifacts@1
+  condition: succeededOrFailed()
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)/web_assignment/test-results'
+    ArtifactName: 'Test Results'
+  displayName: 'Output Test Results'

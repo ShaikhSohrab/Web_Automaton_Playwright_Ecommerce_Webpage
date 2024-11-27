@@ -1,7 +1,6 @@
-import {expect} from '@playwright/test';
+import { expect } from '@playwright/test';
 
 class HomePage {
-
     constructor(page) {
 
         this.page = page;
@@ -11,16 +10,15 @@ class HomePage {
 
     }
 
-    async gotoHomePage(){
+    async gotoHomePage() {
         await this.page.goto("/");
     }
 
-    async checkNextPreviousButton(){
+    async checkNextPreviousButton() {
         await this.nextButton.click();
         await this.previousButton.click();
     }
 
-
 }
 
-module.exports=HomePage;
+module.exports = HomePage;

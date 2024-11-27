@@ -21,14 +21,10 @@ test("Verify if user is able to place order without login", async ({ page }) => 
 
 });
 
-test.only("Verify if user is able to place order without login and any item in cart", async ({ page }) => {
+test("Verify if user is able to place order without login and any item in cart", async ({ page }) => {
 
   const checkoutWithoutItem = new Checkout(page);
   await checkoutWithoutItem.gotoHomePage();
   await checkoutWithoutItem.placeOrderWithoutItemInCart();
 
 });
-
-
-//Shift this case in Login and Register
-

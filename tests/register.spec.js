@@ -23,10 +23,10 @@ test("Verify New User Registeration Flow", async ({ page }) => {
         await alertMessage.accept();
     });
 
-    
+
     await registerPage.registerOnWeb(incrementedUserName, "SohrabShaikh");
 
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(2000);
 
     if (alertAppeared) {
         console.log(`A new user was registered successfully with username: ${incrementedUserName}`);
@@ -119,10 +119,10 @@ test("Verify if user is able to register without username and password", async (
 
 test("Verify if user is able to click on close button from Register popup Window", async ({ page }) => {
 
-const closeSignUpWindow = new RegisterPage(page);
+    const closeSignUpWindow = new RegisterPage(page);
 
-await closeSignUpWindow.gotoHomePage();
-await closeSignUpWindow.closePopupSignUpWindow();
+    await closeSignUpWindow.gotoHomePage();
+    await closeSignUpWindow.closePopupSignUpWindow();
 
 })
 
@@ -136,34 +136,30 @@ test("Verify if user is able to click on 'X' button from Register popup Window",
 });
 
 
-test("Verify if user try to enter only special cherecters and numbers in user name and password", async ({ page }) => {
+test("Verify if user try to enter only special cherecters and numbers in user name and password -> Login", async ({ page }) => {
 
     const initialUserName = ":>?<{}|!~@#$%^-=++_";
     const dateTime = Date.now();
-    const mergeUserNameAndDateTime = `${initialUserName}${dateTime}`
-  
-    page.on("dialog", async (alertMessage) => {
-      alertAppeared = true;
-      expect(alertMessage.type()).toContain("alert");
-      expect(alertMessage.message()).toContain("Sign up successful.");
-      await alertMessage.dismiss();
-  
-    await page.goto("/");
-    await page.click("//*[@id='signin2']");
-  
-    await page.fill("//input[@id='sign-username']", mergeUserNameAndDateTime);
-    await page.fill("//input[@id='sign-password']", mergeUserNameAndDateTime);
-  
+    const mergeUserNameAndDateTime = `${initialUserName}${dateTime}`;
     let alertAppeared = false;
-  
+
+    page.on("dialog", async (alertMessage) => {
+        alertAppeared = true;
+        expect(alertMessage.type()).toContain("alert");
+        expect(alertMessage.message()).toContain("Sign up successful.");
+        await alertMessage.dismiss();
+
     });
-  
-    await page.click("//button[@onclick='register()']");
-  
-    await page.waitForTimeout(3000);
+
+    const registerFlow = new RegisterPage(page);
+
+    await registerFlow.gotoHomePage();
+    await registerFlow.registerOnWeb(mergeUserNameAndDateTime, mergeUserNameAndDateTime);
+
+    await page.waitForTimeout(2000);
     if (alertAppeared) {
-      console.log("A new User was Registered with only Special Characters and Number, which is not valid");
+        console.log("A new User was Registered with only Special Characters and Number, which is not valid");
     } else {
-      console.log("Error occured as user tried to registered with only special characters in User Name field");
+        console.log("Error occured as user tried to registered with only special characters in User Name field");
     }
-  });
+});

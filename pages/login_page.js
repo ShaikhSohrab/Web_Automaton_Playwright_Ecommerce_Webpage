@@ -1,4 +1,4 @@
-import {expect} from '@playwright/test';
+import { expect } from '@playwright/test';
 
 class LoginPage {
 
@@ -15,11 +15,11 @@ class LoginPage {
         this.loginWindowCloseIcon = page.locator("//h5[@id='logInModalLabel' and text()='Log in']/following-sibling::button[@aria-label='Close']")
     }
 
-    async gotoHomePage(){
+    async gotoHomePage() {
         await this.page.goto("/");
     }
 
-    async loginToWeb(user, password){
+    async loginToWeb(user, password) {
         await this.loginButton.click()
         await this.loginUserName.fill(user)
         await this.loginPassword.fill(password)
@@ -33,18 +33,19 @@ class LoginPage {
 
     }
 
-    async verifyTitleAndURL(expectedTitle, expectedURL){
+    async verifyTitleAndURL(expectedTitle, expectedURL) {
         await expect(this.page).toHaveTitle(expectedTitle);
         await expect(this.page).toHaveURL(expectedURL);
     }
 
-    async closePopupLoginWindow(){
+
+    async closePopupLoginWindow() {
         await this.loginButton.click();
         await this.loginWindowCloseButton.click();
         await expect(this.loginWindowCloseIcon).toBeHidden();
     }
 
-    async xPopupLoginWindow(){
+    async xPopupLoginWindow() {
         await this.loginButton.click();
         await this.loginWindowCloseIcon.click();
         await expect(this.loginWindowCloseIcon).toBeHidden();
@@ -52,4 +53,4 @@ class LoginPage {
 
 }
 
-module.exports=LoginPage;
+module.exports = LoginPage;

@@ -1,4 +1,4 @@
-import {expect} from '@playwright/test';
+import { expect } from '@playwright/test';
 
 class RegisterPage {
 
@@ -13,16 +13,15 @@ class RegisterPage {
         this.signUpWindowCloseButton = page.locator("//button[@onclick='register()']/preceding-sibling::button[text()='Close']");
         this.signUpWindowCloseIcon = page.locator("//h5[@id='signInModalLabel']/following-sibling::button[@aria-label='Close']");
 
-        
     }
 
-    async gotoHomePage(){
+    async gotoHomePage() {
         await this.page.goto("/");
     }
 
-    
 
-    async registerOnWeb (user, password){
+
+    async registerOnWeb(user, password) {
         await this.signUpButton.click();
         await this.signUpUserName.fill(user);
         await this.signUpPassword.fill(password);
@@ -30,13 +29,13 @@ class RegisterPage {
 
     }
 
-    async closePopupSignUpWindow(){
+    async closePopupSignUpWindow() {
         await this.signUpButton.click();
         await this.signUpWindowCloseButton.click();
         await expect(this.signUpWindowCloseButton).toBeHidden();
     }
 
-    async xPopupSignupWindow(){
+    async xPopupSignupWindow() {
         await this.signUpButton.click();
         await this.signUpWindowCloseIcon.click();
         await expect(this.signUpWindowCloseIcon).toBeHidden();
@@ -44,4 +43,4 @@ class RegisterPage {
 
 }
 
-module.exports=RegisterPage;
+module.exports = RegisterPage;

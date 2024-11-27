@@ -1,6 +1,8 @@
-import {test, expect} from '@playwright/test';
+const { test, expect } = require("@playwright/test");
+const HomePage = require('../pages/home_page');
 
-test('Dynamic Content Verification', async ({page}) => {
+test('Dynamic Content Verification', async ({ page }) => {
+    const dynamicPage = new HomePage(page);
 
     let apiData = [];
     page.on('response', async (response) => {
@@ -14,13 +16,13 @@ test('Dynamic Content Verification', async ({page}) => {
         }
     });
 
-    await page.goto("https://www.demoblaze.com");
+    await dynamicPage.gotoHomePage();
     await page.click("//a[normalize-space(text())='Laptops']");
     await page.waitForTimeout(3000);
     const productUI = await page.locator('.card-title a').allTextContents();
     const productAPI = apiData.map(item => item.title);
     expect(productUI).toEqual(productAPI);
     console.log('UI and API data Matched');
-    
-    
+
+
 })
