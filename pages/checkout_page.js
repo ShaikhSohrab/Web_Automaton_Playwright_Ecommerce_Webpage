@@ -83,7 +83,8 @@ class Checkout {
     // This function is to verify cart with Items added in cart
     async verifyCartItems(expectedItems) {
         for (const itemName of expectedItems) {
-            const item = await this.page.locator(`//td[normalize-space(text())='${itemName}']`);
+            const item = await this.page.locator(`//td[normalize-space(text())="${itemName}"]`);
+            await item.waitFor({timeout: 5000});
             const itemText = await item.textContent();
             expect(itemText).toContain(itemName);
         }
