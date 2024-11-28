@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 
 class LoginPage {
-
+    // All Locators of Login Page
     constructor(page) {
 
         this.page = page;
@@ -19,6 +19,7 @@ class LoginPage {
         await this.page.goto("/");
     }
 
+    // perform Login with username and password
     async loginToWeb(user, password) {
         await this.loginButton.click()
         await this.loginUserName.fill(user)
@@ -38,13 +39,14 @@ class LoginPage {
         await expect(this.page).toHaveURL(expectedURL);
     }
 
-
+    // This function is used to close the popup window with close button
     async closePopupLoginWindow() {
         await this.loginButton.click();
         await this.loginWindowCloseButton.click();
         await expect(this.loginWindowCloseIcon).toBeHidden();
     }
 
+    // This function is used to close the popup window with 'x' icon
     async xPopupLoginWindow() {
         await this.loginButton.click();
         await this.loginWindowCloseIcon.click();

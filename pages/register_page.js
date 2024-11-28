@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 
 class RegisterPage {
 
+    // All Locators related to Register/Signup Page
     constructor(page) {
 
         this.page = page;
@@ -19,8 +20,7 @@ class RegisterPage {
         await this.page.goto("/");
     }
 
-
-
+    // This function is used to register on webpage
     async registerOnWeb(user, password) {
         await this.signUpButton.click();
         await this.signUpUserName.fill(user);
@@ -29,12 +29,14 @@ class RegisterPage {
 
     }
 
+    // This function is used to close the Register popup windown with Close button
     async closePopupSignUpWindow() {
         await this.signUpButton.click();
         await this.signUpWindowCloseButton.click();
         await expect(this.signUpWindowCloseButton).toBeHidden();
     }
 
+    // This function is used to close the Register popup windown with 'x' icon
     async xPopupSignupWindow() {
         await this.signUpButton.click();
         await this.signUpWindowCloseIcon.click();

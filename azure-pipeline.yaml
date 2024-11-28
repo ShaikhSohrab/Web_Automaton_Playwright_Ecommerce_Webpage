@@ -13,7 +13,7 @@ steps:
     npm install
     npm playwright install
     npx playwright test --project=chromium --reporter=html
-  displayName: 'Execute Playwright Tests'
+  displayName: 'Execute WebdriverIO Tests'
 
 - task: PublishBuildArtifacts@1
   condition: succeededOrFailed()

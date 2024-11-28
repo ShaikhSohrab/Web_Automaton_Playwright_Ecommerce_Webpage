@@ -2,10 +2,11 @@ import { expect } from '@playwright/test';
 
 class Checkout {
 
+    // All locators for this page
     constructor(page) {
 
         this.page = page;
-
+        
         this.phoneCategoryButton = page.locator("//a[@id='itemc' and text()='Phones']");
         this.samsungS6 = page.locator("//a[@class='hrefch' and text()='Samsung galaxy s6']");
         this.addToCartButton = page.locator("//a[@class='btn btn-success btn-lg']");
@@ -29,6 +30,7 @@ class Checkout {
         await this.page.goto("/");
     }
 
+    // This function is used to Place Order without Login (Negative Case)
     async placeOrderwithoutLogin(name = "SohrabShaikh", creditCard = "1234567890") {
         await this.phoneCategoryButton.click();
         await this.samsungS6.click();
@@ -40,6 +42,7 @@ class Checkout {
         await this.purchaseButtonOnPlaceOrderForm.click();
     }
 
+    // This function is used to Place Order without items in cart (Negative Case)
     async placeOrderWithoutItemInCart(name = "SohrabShaikh", creditCard = "1234567890") {
         await this.cartLink.click();
         await this.placeOrderOnCartScreen.click();
@@ -48,6 +51,7 @@ class Checkout {
         await this.purchaseButtonOnPlaceOrderForm.click();
     }
 
+    // This function is user to add specific Items in cart
     async addItemsToCart() {
         await this.phoneCategoryButton.click();
         await this.samsungS6.click();
@@ -67,6 +71,7 @@ class Checkout {
         await this.page.goto("https://www.demoblaze.com/cart.html", { waitUntil: "domcontentloaded" })
     }
 
+    // This function if for checkout with Items in cart
     async checkoutWithItemInCart(name, card) {
         await this.placeOrderOnCartScreen.click();
         await this.nameFieldOnPlaceOrderForm.fill(name);
@@ -75,6 +80,7 @@ class Checkout {
         await this.page.waitForTimeout(3000);
     }
 
+    // This function is to verify cart with Items added in cart
     async verifyCartItems(expectedItems) {
         for (const itemName of expectedItems) {
             const item = await this.page.locator(`//td[normalize-space(text())='${itemName}']`);
@@ -83,6 +89,7 @@ class Checkout {
         }
     }
 
+    // This function is to Verify the Order details like Name of user, Order Number, Date of Order, etc. after placing order 
     async verifyOrderDetails() {
         await expect(this.confirmationModal).toBeVisible();
         const detailsText = await this.orderDetails.textContent();

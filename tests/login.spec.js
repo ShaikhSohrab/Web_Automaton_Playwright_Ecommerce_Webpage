@@ -1,7 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const LoginPage = require('../pages/login_page');
 
-
 // This is to prevent using LoginAuth of GlobalSetup
 test.use({ storageState: "./NoAuth.json" });
 

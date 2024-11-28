@@ -7,13 +7,13 @@ test.use({ storageState: "./NoAuth.json" });
 test("Verify New User Registeration Flow", async ({ page }) => {
 
     const registerPage = new RegisterPage(page);
+
     // Defile User Name and join Username with Date and Time to have unique Username everytime
     const initialUserName = "SohrabShaikh";
     const dateTimeUser = Date.now();
     const incrementedUserName = `${initialUserName}${dateTimeUser}`;
     let alertAppeared = false;
 
-    // Goto webpage
     await registerPage.gotoHomePage();
 
     page.on("dialog", async (alertMessage) => {
@@ -36,6 +36,7 @@ test("Verify New User Registeration Flow", async ({ page }) => {
 
     expect(alertAppeared).toBeTruthy();
 });
+
 
 test("Verify if already registerd user is able to register again", async ({ page }) => {
     let alertAppeared = false;
